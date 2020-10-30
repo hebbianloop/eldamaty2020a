@@ -368,220 +368,316 @@ The cumulative effect of social-strain from community adversity, dysfunctional i
 \subsection{Tables}
 %Tables should be inserted at the end of the manuscript. Please build your table directly in LaTeX.Tables provided as jpeg/tiff files will not be accepted. Please note that very large tables (covering several pages) cannot be included in the final PDF for reasons of space. These tables will be published as \href{http://home.frontiersin.org/about/author-guidelines#SupplementaryMaterial}{Supplementary Material} on the online article page at the time of acceptance. The author will be notified during the typesetting of the final article if this is the case. 
 
-Latent Variables: Experience of Violence in Adulthood
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: VEXP LATENT FACTOR
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[]
 \begin{tabular}{lllll}
-        & Estimate & Std.Err & Z-value & p     \\
-VEXP    &          &         &         &       \\
-VEXP\_P & 0.066    & 0.025   & 2.627   & 0.009 \\
-VEXP-O  & 0.019    & 0.009   & 2.076   & 0.038 \\
-VEXP-V  & 0.104    & 0.021   & 4.955   & 0.000 \\
-VEXP-PP & 0.040    & 0.009   & 4.332   & 0.000
+VEXP Latent Factor & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                   &          &            &         &                          \\
+VEXP-P             & 0.066    & 0.025      & 2.627   & 0.009                    \\
+VEXP-O             & 0.019    & 0.009      & 2.076   & 0.038                    \\
+VEXP-V             & 0.104    & 0.021      & 4.955   & 0.000                    \\
+VEXP-PP            & 0.040    & 0.009      & 4.332   & 0.000                   
 \end{tabular}
-\end{table}
+\caption{Normalized estimates for latent factors estimated with confirmatory factor analysis summarizing cumulative violence experience (VEXP) in the perception, observation, victimization and perpetration sub-scales of the Violence Experience Survey ($CFI = 0.99$, $TLI = 0.95$; $RMSEA = 0.028$, $p = 0.40$)\label{tab:1}}
+\end{table} 
 
-Covariances: Experience of Violence in Adulthood
-\begin{table}[]
-\begin{tabular}{lllll}
-       & Estimate & Std.Err & Z-value & p     \\
-VEXP-P &          &         &         &       \\
-VEXP-O & 0.012    & 0.003   & 3.702   & 0.000
-\end{tabular}
-\end{table}
 
-Regressions: Experience of Violence in Adulthood
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: VEXP-P COVARIANCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[]
 \begin{tabular}{lllll}
-        & Estimate & Std.Err & Z-value & p     \\
-VEXP    &          &         &         &       \\
-DUSI-VP & 1.032    & 0.607   & 2.413   & 0.016 \\
-Sex     & -0.609   & 0.241   & -3.792  & 0.000 \\
-SES     & 0.007    & 0.102   & 0.069   & 0.945 \\
-BMI     & -0.047   & 0.043   & -1.106  & 0.269 \\
-IQ      & -0.006   & 0.008   & -0.748  & 0.455 \\
-BAS-D   & -0.011   & 0.031   & -0.358  & 0.720 \\
-BAS-FS  & -0.012   & 0.039   & -0.314  & 0.753 \\
-BAS-RR  & 0.057    & 0.042   & 1.373   & 0.170 \\
-BIS     & 0.028    & 0.022   & 1.283   & 0.200 \\
-        &          &         &         &       \\
-DUSI-R  &          &         &         &       \\
-VEXP    & 0.004    & 0.015   & 0.239   & 0.811
+VEXP-P Covariance & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                  &          &            &         &                          \\
+VEXP-O            & 0.012    & 0.003      & 3.702   & 0.000                   
 \end{tabular}
+\caption{**CHECK WITH SHADY\label{tab:2}}
 \end{table}
 
 
-Regressions: Growth Curve Model of Violence Risk:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: VEXP REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+Regression      & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                &          &            &         &                          \\
+VEXP            &          &            &         &                          \\
+DUSI-VP         & 1.032    & 0.607      & 2.413   & 0.016                    \\
+Sex             & -0.609   & 0.241      & -3.792  & 0.000                    \\
+SES             & 0.007    & 0.102      & 0.069   & 0.945                    \\
+BMI             & -0.047   & 0.043      & -1.106  & 0.269                    \\
+IQ              & -0.006   & 0.008      & -0.748  & 0.455                    \\
+BAS-D           & -0.011   & 0.031      & -0.358  & 0.720                    \\
+BAS-FS          & -0.012   & 0.039      & -0.314  & 0.753                    \\
+BAS-RR          & 0.057    & 0.042      & 1.373   & 0.170                    \\
+BIS             & 0.028    & 0.022      & 1.283   & 0.200                    \\
+                &          &            &         &                          \\
+DUSI-R          &          &            &         &                          \\ 
+VEXP            & 0.004    & 0.015      & 0.239   & 0.811                   
+\end{tabular}
+\caption{Regressions for VEXP\label{tab:3}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: DUSI-VP REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[]
 \begin{tabular}{llllll}
-                     & Estimate & Std.Err & Z-value & p     & Std.all \\
-DUSI-VP (Wave One)   &          &         &         &       &         \\
-BIS                  & 0.004    & 0.004   & 0.877   & 0.381 & 0.072   \\
-BAS-RR               & 0.005    & 0.008   & 0.631   & 0.528 & 0.054   \\
-BAS-D                & -0.000   & 0.007   & -0.033  & 0.974 & -0.003  \\
-BAS-FS               & 0.011    & 0.007   & 1.525   & 0.127 & 0.166   \\
-                     &          &         &         &       &         \\
-DUSI-VP (Wave Two)   &          &         &         &       &         \\
-BIS                  & 0.009    & 0.005   & 1.841   & 0.066 & 0.166   \\
-BAS-RR               & -0.012   & 0.009   & -1.228  & 0.219 & -0.112  \\
-BAS-D                & 0.003    & 0.008   & 0.426   & 0.670 & 0.043   \\
-BAS-FS               & 0.014    & 0.009   & 1.628   & 0.103 & 0.170   \\
-                     &          &         &         &       &         \\
-DUSI-VP (Wave Three) &          &         &         &       &         \\
-BIS                  & -0.008   & 0.005   & -1.493  & 0.135 & -0.141  \\
-BAS-RR               & 0.008    & 0.010   & 0.810   & 0.418 & 0.075   \\
-BAS-D                & 0.000    & 0.010   & 0.015   & 0.988 & 0.002   \\
-BAS-FS               & 0.003    & 0.010   & 0.281   & 0.779 & 0.030   \\
-                     &          &         &         &       &         \\
-Latent Intercept     &          &         &         &       &         \\
-SES                  & -0.064   & 0.018   & -3.543  & 0.000 & -0.436  \\
-Sex                  & -0.012   & 0.031   & -0.374  & 0.708 & -0.044  \\
-DUSI-R               & 0.051    & 0.032   & 1.557   & 0.119 & 0.190   \\
-                     &          &         &         &       &         \\
-Latent Slope         &          &         &         &       &         \\
-SES                  & 0.028    & 0.012   & 2.362   & 0.018 & 0.353   \\
-Sex                  & -0.019   & 0.020   & -0.963  & 0.336 & -0.135  \\
-DUSI-R               & 0.041    & 0.020   & 2.005   & 0.045 & 0.289   \\
-                     &          &         &         &       &         \\
-VEXP                 &          &         &         &       &         \\
-Latent Intercept     & -0.112   & 0.142   & -0.789  & 0.430 & -0.142  \\
-Latent Slope         & 0.343    & 0.170   & 2.025   & 0.043 & 0.234  
+Regression                     & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) & Std.all \\ \hline
+                               &          &            &         &                          &         \\
+DUSI-VP (Wave One)             &          &            &         &                          &         \\
+BIS                            & 0.004    & 0.004      & 0.877   & 0.381                    & 0.072   \\
+BAS-RR                         & 0.005    & 0.008      & 0.631   & 0.528                    & 0.054   \\
+BAS-D                          & -0.000   & 0.007      & -0.033  & 0.974                    & -0.003  \\
+BAS-FS                         & 0.011    & 0.007      & 1.525   & 0.127                    & 0.166   \\
+                               &          &            &         &                          &         \\
+DUSI-VP (Wave Two)             & 0.031    & -0.358     & 0.720   &                          &         \\
+BIS                            & 0.009    & 0.005      & 1.841   & 0.066                    & 0.166   \\
+BAS-RR                         & -0.012   & 0.009      & -1.228  & 0.219                    & -0.112  \\
+BAS-D                          & 0.003    & 0.008      & 0.426   & 0.670                    & 0.043   \\
+BAS-FS                         & 0.014    & 0.009      & 1.628   & 0.103                    & 0.170   \\
+                               &          &            &         &                          &         \\
+DUSI-VP (Wave Three)           &          &            &         &                          &         \\
+BIS                            & -0.008   & 0.005      & -1.493  & 0.135                    & -0.141  \\
+BAS-RR                         & 0.008    & 0.010      & 0.810   & 0.418                    & 0.075   \\
+BAS-D                          & 0.000    & 0.010      & 0.015   & 0.988                    & 0.002   \\
+BAS-FS                         & 0.003    & 0.010      & 0.281   & 0.779                    & 0.030   \\
+                               &          &            &         &                          &         \\
+Latent Intercept               &          &            &         &                          &         \\
+SES                            & -0.064   & 0.018      & -3.543  & 0.000                    & -0.436  \\
+Sex                            & -0.012   & 0.031      & -0.374  & 0.708                    & -0.044  \\
+DUSI-R                         & 0.051    & 0.032      & 1.557   & 0.119                    & 0.190   \\
+                               &          &            &         &                          &         \\
+Latent Slope                   &          &            &         &                          &         \\
+SES                            & 0.028    & 0.012      & 2.362   & 0.018                    & 0.353   \\
+Sex                            & -0.019   & 0.020      & -0.963  & 0.336                    & -0.135  \\
+DUSI-R                         & 0.041    & 0.020      & 2.005   & 0.045                    & 0.289   \\
+                               &          &            &         &                          &         \\
+VEXP                           &          &            &         &                          &         \\
+Latent Intercept               & -0.112   & 0.142      & -0.789  & 0.430                    & -0.142  \\
+Latent Slope                   & 0.343    & 0.170      & 2.025   & 0.043                    & 0.234   \\
+                               &          &            &         &                          &         \\
+Latent Growth Curve Parameters &          &            &         &                          &         \\ \hline
+                               &          &            &         &                          &         \\
+Latent Intercept               & -0.073   & 0.117      & -0.620  & 0.535                    & -0.560  \\
+Latent Slope                   & 0.178    & 0.068      & 2.608   & 0.009                    & 2.570  
 \end{tabular}
+\caption{Regressions for DUSI-VP\label{tab:4}}
 \end{table}
 
-Latent Growth Curve Parameters: Growth Curve Model of Violence Risk:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: FDSS LATENT FACTOR
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+FDSS Latent Factor & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                   &          &            &         &                          \\
+Fam-Co             & 0.091    & 0.011      & 7.940   & 0.000                    \\
+Fam-Bf             & 0.041    & 0.009      & 4.846   & 0.000                    \\
+Fam-St             & -0.179   & 0.014      & -12.912 & 0.000                    \\
+Fam-Bd             & -0.103   & 0.019      & -5.287  & 0.000                    \\
+Fam-Rx             & -0.175   & 0.020      & -8.677  & 0.000                    \\
+Fam-Cf             & -0.075   & 0.011      & -6.608  & 0.000                    \\
+SS                 & 0.058    & 0.017      & 3.461   & 0.001                   
+\end{tabular}
+\caption{Normalized estimates for latent factors estimated with confirmatory factor analysis summarizing family dynamics and social support (FDSS) in the Family Relationship Characteristics, Reactivity in Family Communication, Family Conflict, and the Vaux Social Support scale. ($CFI=0.99$, $TLI=0.98$; $RMSEA=0.042$, $p=0.55$)\label{tab:5}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: FDSS REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+Regression & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+           &          &            &         &                          \\
+FDSS       &          &            &         &                          \\
+SES        & -0.190   & 0.108      & -1.754  & 0.079                    \\
+Sex        & 0.589    & 0.184      & 3.193   & 0.001                    \\
+BMI        & 0.013    & 0.024      & 0.544   & 0.587                    \\
+IQ         & -0.007   & 0.005      & -1.337  & 0.181                    \\
+DUSI-VP    & -1.735   & 0.518      & -3.351  & 0.001                    \\
+BAS-D      & 0.059    & 0.037      & 1.579   & 0.114                    \\
+BAS-FS     & -0.024   & 0.040      & -0.605  & 0.545                    \\
+BAS-RR     & -0.098   & 0.046      & -2.121  & 0.034                    \\
+BIS        & -0.005   & 0.022      & -0.220  & 0.826                    \\
+           &          &            &         &                          \\
+VEXP       &          &            &         &                          \\
+FDSS       & -0.220   & 0.067      & -3.265  & 0.001                   
+\end{tabular}
+\caption{Regressions for FDSS\label{tab:6}}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: SSWB LATENT FACTOR
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+SSWB Latent Factor & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                   &          &            &         &                          \\
+NBR-R              & 0.018    & 0.019      & 0.917   & 0.359                    \\
+NBR-C              & 0.187    & 0.040      & 4.731   & 0.000                    \\
+NBR-D              & -0.031   & 0.019      & -1.596  & 0.111                    \\
+NBR-CC             & -0.045   & 0.015      & -2.950  & 0.003                    \\
+NBR-FC             & -0.021   & 0.017      & -1.222  & 0.222                    \\
+SLE                & -0.065   & 0.010      & -6.160  & 0.000                   
+\end{tabular}
+\caption{Normalized estimates for latent factors estimated with confirmatory factor analysis summarizing Social Safety and Well-Being (SSWB)  in measures of neighborhood cohesion (NBR-C), resources (NBR-R), disorganization (NBR-D), stressful life events (SLE), fear of crime (NBR-FC), and coping with community crime (NBR-CC) ($CFI=0.98$, $TLI=0.92$; $RMSEA=0.071$, $p=0.26$).\label{tab:7}}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: SSWB REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+Regression  & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+            &          &            &         &                          \\
+VEXP        &          &            &         &                          \\
+SSWB        & -0.404   & 0.101      & -3.978  & 0.000                    \\
+            &          &            &         &                          \\
+DUSI-R      &          &            &         &                          \\
+SSWB        & -0.053   & 0.016      & -3.224  & 0.001                    \\
+            &          &            &         &                          \\
+SSWB        &          &            &         &                          \\
+SES         & 0.054    & 0.195      & 0.275   & 0.784                    \\
+Sex         & 0.607    & 0.203      & 2.994   & 0.003                    \\
+BMI         & 0.093    & 0.030      & 3.064   & 0.002                    \\
+IQ          & 0.010    & 0.008      & 1.304   & 0.192                    \\
+DUSI-VP     & -2.664   & 0.607      & -4.388  & 0.000                    \\
+BAS-D       & -0.056   & 0.055      & -1.030  & 0.303                    \\
+BAS-FS      & -0.019   & 0.052      & -0.357  & 0.721                    \\
+BAS-RR      & -0.005   & 0.061      & -0.081  & 0.935                    \\
+BIS         & 0.013    & 0.034      & 0.375   & 0.707                   
+\end{tabular}
+\caption{Regressions: Social Safety and Well-Being\label{tab:8}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: SNAV LATENT FACTOR
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+SNAV Latent Factor & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                   &          &            &         &                          \\
+AGV-S              & 0.196    & 0.032      & 6.136   & 0.000                    \\
+AGV-A              & 0.340    & 0.054      & 6.329   & 0.000                    \\
+AGV-E              & 0.235    & 0.036      & 6.484   & 0.000                    \\
+AGV-P              & 0.263    & 0.050      & 5.207   & 0.000                    \\
+AG                 & 0.019    & 0.010      & 1.892   & 0.059                    \\
+PDV                & 0.014    & 0.013      & 1.041   & 0.298                    \\
+ADQ                & -0.056   & 0.014      & -4.013  & 0.000                    \\
+SR                 & -0.277   & 0.039      & -7.186  & 0.000                   
+\end{tabular}
+\caption{Normalized estimates for latent factors estimated with confirmatory factor analysis summarizing Social Norms and Attitudes towards Violence (SNAV) in the sub-scales of the Attitudes towards Guns and Violence (AGV-S/E/A/P), Peer Deviancy (PDV), Aversion to Delinquency (ADQ), Attitudes toward Gangs (AG), and Social Responsibility (SR) ($CFI=0.924$, $TLI=0.848$; $RMSEA=0.80$, $p=0.074$).\label{tab:9}}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: SNAV REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{lllll}
+SNAV Regression  & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                 &          &            &         &                          \\
+VEXP             & 0.329    & 0.121      & 2.726   & 0.006                    \\
+DUSI-R           & 2.800    & 0.753      & 3.719   & 0.000                    \\
+SES              & -0.012   & 0.136      & -0.086  & 0.931                    \\
+Sex              & 0.593    & 0.202      & 2.942   & 0.003                    \\
+BMI              & -0.043   & 0.019      & -2.272  & 0.023                    \\
+IQ               & -0.003   & 0.007      & -0.470  & 0.639                    \\
+DUSI-VP          & 2.336    & 0.516      & 4.523   & 0.000                    \\
+BAS-D            & 0.018    & 0.047      & 0.380   & 0.704                    \\
+BAS-FS           & 0.066    & 0.045      & 1.489   & 0.137                    \\
+BAS-RR           & -0.020   & 0.063      & -0.317  & 0.751                    \\
+BIS              & -0.082   & 0.032      & -2.547  & 0.011                   
+\end{tabular}
+\caption{Regressions: Social Norms and Deviancy\label{tab:10}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: PATH MODEL REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[]
 \begin{tabular}{llllll}
-                 & Estimate & Std.Err & Z-value & p     & Std.all \\
-Latent Intercept & -0.073   & 0.117   & -0.620  & 0.535 & -0.560  \\
-Latent Slope     & 0.178    & 0.068   & 2.608   & 0.009 & 2.570  
+Path Model Regression &       & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                      &       &          &            &         &                          \\
+SNAV                  &       &          &            &         &                          \\
+                      & H     & 0.803    & 0.362      & 2.217   & 0.027                    \\
+                      & MAg-A & -0.360   & 0.353      & -1.019  & 0.308                    \\
+                      &       &          &            &         &                          \\
+MAg-B                 &       &          &            &         &                          \\
+                      & SNAV  & 0.108    & 0.018      & 5.877   & 0.000                    \\
+                      &       &          &            &         &                          \\
+MAg-F                 &       &          &            &         &                          \\
+                      & SNAV  & 0.060    & 0.010      & 6.122   & 0.000                   
 \end{tabular}
+\caption{Regressions: Cascading Social-Strains Effect Social Deviance\label{tab:11}}
 \end{table}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: PATH MODEL REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[]
+\begin{tabular}{llllll}
+Path Model Regression &      & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                      &      &          &            &         &                          \\
+FDSS                  &      &          &            &         &                          \\
+(direct)              & SSWB & 0.615    & 0.107      & 5.731   & 0.000                    \\
+                      &      &          &            &         &                          \\
+SNAV                  &      &          &            &         &                          \\
+(direct)              & SSWB & -0.335   & 0.084      & -3.962  & 0.000                    \\
+(direct)              & VEXP & 0.150    & 0.073      & 2.042   & 0.041                    \\
+(indirect)            & FDSS & 0.005    & 0.048      & 0.101   & 0.920                    \\
+                      &      &          &            &         &                          \\
+VEXP                  &      &          &            &         &                          \\
+(direct)              & SSWB & -0.297   & 0.076      & -3.913  & 0.000                    \\
+(indirect)            & FDSS & -0.097   & 0.044      & -2.229  & 0.026                   
+\end{tabular}
+\caption{Regressions: Cascading Social-Strains Effect Social Deviance\label{tab:12}}
+\end{table}
 
-Latent Variables: Family Dynamics and Social Support
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: PATH MODEL REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[]
 \begin{tabular}{lllll}
-       & Estimate & Std.Err & Z-value & p     \\
-FDSS   &          &         &         &       \\
-Fam-Co & 0.091    & 0.011   & 7.940   & 0.000 \\
-Fam-Bf & 0.041    & 0.009   & 4.846   & 0.000 \\
-Fam-St & -0.179   & 0.014   & -12.912 & 0.000 \\
-Fam-Bd & -0.103   & 0.019   & -5.287  & 0.000 \\
-Fam-Rx & -0.175   & 0.020   & -8.677  & 0.000 \\
-Fam-Cf & -0.075   & 0.011   & -6.608  & 0.000 \\
-SS     & 0.058    & 0.017   & 3.461   & 0.001
+Path Model Variance & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                    &          &            &         &                          \\
+FDSS                & 1.483    & 0.141      & 10.536  & 0.000                    \\
+SNAV                & 0.747    & 0.071      & 10.535  & 0.000                    \\
+VEXP                & 0.628    & 0.060      & 10.466  & 0.000                   
 \end{tabular}
+\caption{Variance: Cascading Social-Strains Effect Social Deviance\label{tab:13}}
 \end{table}
 
-Regressions: Family Dynamics and Social Support
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table :: PATH MODEL REGRESSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[]
-\begin{tabular}{lllll}
-        & Estimate & Std.Err & Z-value & p     \\
-FDSS    &          &         &         &       \\
-SES     & -0.190   & 0.108   & -1.754  & 0.079 \\
-Sex     & 0.589    & 0.184   & 3.193   & 0.001 \\
-BMI     & 0.013    & 0.024   & 0.544   & 0.587 \\
-IQ      & -0.007   & 0.005   & -1.337  & 0.181 \\
-DUSI-VP & -1.735   & 0.518   & -3.351  & 0.001 \\
-BAS-D   & 0.059    & 0.037   & 1.579   & 0.114 \\
-BAS-FS  & -0.024   & 0.040   & -0.605  & 0.545 \\
-BAS-RR  & -0.098   & 0.046   & -2.121  & 0.034 \\
-BIS     & -0.005   & 0.022   & -0.220  & 0.826 \\
-        &          &         &         &       \\
-VEXP    &          &         &         &       \\
-FDSS    & -0.220   & 0.067   & -3.265  & 0.001
+\begin{tabular}{llllll}
+Mediation Parameters &      & Estimate & Std. Error & Z-value & P($\textgreater{}\|z\|$) \\ \hline
+                     &      &          &            &         &                          \\
+VEXP                 &      &          &            &         &                          \\
+(direct)             & SSWB & -0.297   & 0.076      & -3.913  & 0.000                    \\
+(indirect)           & FDSS & -0.060   & 0.029      & -2.078  & 0.038                    \\
+Total                &      & -0.357   & 0.072      & -4.965  & 0.000                    \\
+                     &      &          &            &         &                          \\
+SNAV                 &      &          &            &         &                          \\
+(direct)             & SSWB & -0.335   & 0.084      & -3.962  & 0.000                    \\
+(direct)             & VEXP & 0.150    & 0.073      & 2.042   & 0.041                    \\
+(indirect)           & FDSS & -0.009   & 0.006      & -1.457  & 0.145                    \\
+(indirect)           & VEXP & -0.045   & 0.024      & -1.820  & 0.069                    \\
+Total                &      & -0.379   & 0.082      & -4.604  & 0.000                    \\
+                     &      &          &            &         &                          \\
+Total                &      & -0.439   & 0.086      & -5.105  & 0.000                   
 \end{tabular}
+\caption{Mediation Parameters: Cascading Social-Strains Effect Social Deviance\label{tab:14}}
 \end{table}
-
-
-Latent variables: Social Safety and Well-Being
-\begin{table}[]
-\begin{tabular}{lllll}
-       & Estimate & Std.Err & Z-value & p     \\
-SSWB   &          &         &         &       \\
-NBR-R  & 0.018    & 0.019   & 0.917   & 0.359 \\
-NBR-C  & 0.187    & 0.040   & 4.731   & 0.000 \\
-NBR-D  & -0.031   & 0.019   & -1.596  & 0.111 \\
-NBR-CC & -0.045   & 0.015   & -2.950  & 0.003 \\
-NBR-FC & -0.021   & 0.017   & -1.222  & 0.222 \\
-SLE    & -0.065   & 0.010   & -6.160  & 0.000
-\end{tabular}
-\end{table}
-
-Regressions: Social Safety and Well-Being
-\begin{table}[]
-\begin{tabular}{lllll}
-        & Estimate & Std.Err & Z-value & p     \\
-VEXP    &          &         &         &       \\
-SSWB    & -0.404   & 0.101   & -3.978  & 0.000 \\
-        &          &         &         &       \\
-DUSI-R  &          &         &         &       \\
-SSWB    & -0.053   & 0.016   & -3.224  & 0.001 \\
-        &          &         &         &       \\
-SSWB    &          &         &         &       \\
-SES     & 0.054    & 0.195   & 0.275   & 0.784 \\
-Sex     & 0.607    & 0.203   & 2.994   & 0.003 \\
-BMI     & 0.093    & 0.030   & 3.064   & 0.002 \\
-IQ      & 0.010    & 0.008   & 1.304   & 0.192 \\
-DUSI-VP & -2.664   & 0.607   & -4.388  & 0.000 \\
-BAS-D   & -0.056   & 0.055   & -1.030  & 0.303 \\
-BAS-FS  & -0.019   & 0.052   & -0.357  & 0.721 \\
-BAS-RR  & -0.005   & 0.061   & -0.081  & 0.935 \\
-BIS     & 0.013    & 0.034   & 0.375   & 0.707
-\end{tabular}
-\end{table}
-
-Latent variables: Social Norms and Deviancy
-\begin{table}[]
-\begin{tabular}{lllll}
-      & Estimate & Std.Err & Z-value & p     \\
-SNAV  &          &         &         &       \\
-AGV-S & 0.196    & 0.032   & 6.136   & 0.000 \\
-AGV-A & 0.340    & 0.054   & 6.329   & 0.000 \\
-AGV-E & 0.235    & 0.036   & 6.484   & 0.000 \\
-AGV-P & 0.263    & 0.050   & 5.207   & 0.000 \\
-AG    & 0.019    & 0.010   & 1.892   & 0.059 \\
-PDV   & 0.014    & 0.013   & 1.041   & 0.298 \\
-ADQ   & -0.056   & 0.014   & -4.013  & 0.000 \\
-SR    & -0.277   & 0.039   & -7.186  & 0.000
-\end{tabular}
-\end{table}
-
-Regressions: Social Norms and Deviancy
-\begin{table}[]
-\begin{tabular}{lllll}
-        & Estimate & Std.Err & Z-value & p     \\
-SNAV    &          &         &         &       \\
-VEXP    & 0.329    & 0.121   & 2.726   & 0.006 \\
-DUSI-R  & 2.800    & 0.753   & 3.719   & 0.000 \\
-SES     & -0.012   & 0.136   & -0.086  & 0.931 \\
-Sex     & 0.593    & 0.202   & 2.942   & 0.003 \\
-BMI     & -0.043   & 0.019   & -2.272  & 0.023 \\
-IQ      & -0.003   & 0.007   & -0.470  & 0.639 \\
-DUSI-VP & 2.336    & 0.516   & 4.523   & 0.000 \\
-BAS-D   & 0.018    & 0.047   & 0.380   & 0.704 \\
-BAS-FS  & 0.066    & 0.045   & 1.489   & 0.137 \\
-BAS-RR  & -0.020   & 0.063   & -0.317  & 0.751 \\
-BIS     & -0.082   & 0.032   & -2.547  & 0.011
-\end{tabular}
-\end{table}
-
-Regressions: Cascading Social-Strains Effect Social Deviance
-\begin{table}[]
-\begin{tabular}{lllll}
-      & Estimate & Std.Err & Z-value & p     \\
-SNAV  &          &         &         &       \\
-H     & 0.803    & 0.362   & 2.217   & 0.027 \\
-MAg-A & -0.360   & 0.353   & -1.019  & 0.308 \\
-MAg-B &          &         &         &       \\
-SNAV  & 0.108    & 0.018   & 5.877   & 0.000 \\
-MAg-F &          &         &         &       \\
-SNAV  & 0.060    & 0.010   & 6.122   & 0.000
-\end{tabular}
-\end{table}
-
-
-
 
 \section*{Conflict of Interest Statement}
 The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
