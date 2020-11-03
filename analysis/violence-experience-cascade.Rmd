@@ -1,0 +1,722 @@
+---
+title: 'Social Strain Cascades into Violence Experience and Altered Social Norms in Emerging Adulthood'
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+  word_document: default
+---
+
+## Required Packages, In-line functions & Data
+```{r,warning=FALSE,message=FALSE}
+if(!require(plyr)){install.packages("plyr")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(knitr)){install.packages("knitr")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(psych)){install.packages("psych")}
+if(!require(lme4)){install.packages("lme4")}
+if(!require(FSA)){install.packages("FSA")}
+if(!require(RColorBrewer)){install.packages("RColorBrewer")}
+if(!require(psycho)){install.packages("psycho")}
+if(!require(lavaan)){install.packages("lavaan")}
+if(!require(semPower)){install.packages("semPower")}
+if(!require(lavaanPlot)){install.packages("lavaanPlot")}
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(semTools)){install.packages("semTools")}
+if(!require(glmnet)){install.packages("glmnet")}
+if(!require(arsenal)){install.packages("arsenal")}
+if(!require(MVN)){install.packages("MVN")}
+if(!require(MASS)){install.packages("MASS")}
+if(!require(DescTools)){install.packages("DescTools")}
+if(!require(simsem)){install.packages("simsem")}
+plot_matrix <- function(matrix_toplot){
+corrplot::corrplot(matrix_toplot, is.corr = FALSE,
+               type = 'lower',
+               order = "original",
+               tl.col='black', tl.cex=.75)
+}
+```
+## Import Data 
+Dataset has been consolidated across waves 1-3 and wave 4 data dictionaries into a tab seperated value spreadsheet. Observations with high LIE scale are removed from consideration.
+```{r}
+## TODO update path names
+adsdf<-read.table('~/Projects/eldamaty2020b/analysis/R_covariates.txt',sep="\t",header=TRUE)
+# normalize DUSI risk value (a total number of 13 questions comprise the scale)
+## --> model performance depends on units being in the same scale
+adsdf$dusi_violencerisk <- adsdf$dusi_violencerisk/13
+# grab complete data (no excluded subjects)
+df <- adsdf[complete.cases(adsdf$wave),]
+# exclude high LIE scale, remove from dataframe
+df[which(df$dusi_lie > 6),] <- NA
+df <- df[complete.cases(df$dusi_lie),]
+df <- df[complete.cases(df$dusi_everuser),]
+# factor definitions
+df$sex <- factor(df$sex,
+                      levels=c(0,1),
+                      labels=c("Female","Male"))
+df$race <- factor(df$race,
+                        levels = c(1,2,3,4),
+                        labels = c('White','Black','Hispanic','Other'))
+```
+## Descriptive Statistics
+Descriptive statistics and multivariate assessments of normality are measured by wave. QQ plots plots are inspected to ensure normally distributed residuals. 
+
+No effect was found for:
+* Sex by SES
+* Violence Risk by Sex
+* Violence Risk by Race
+
+Significant effects were found for:
+
+* SES by Race
+```{r}
+# Slope: Non-parametric test of differences by Race
+Summarize(ses~race,data=df)
+kruskal.test(ses~race,data=df)
+dunnTest(ses~race,data=df,method='holm')
+```
+* BMI by Sex
+```{r}
+# Slope: Non-parametric test of differences by Race
+Summarize(anthro_bmi~sex,data=df)
+kruskal.test(anthro_bmi~sex,data=df)
+```
+* Violence Risk by Drug Use
+```{r}
+# Slope: Non-parametric test of differences by Race
+Summarize(dusi_violencerisk~dusi_everuser,data=df)
+kruskal.test(dusi_violencerisk~dusi_everuser,data=df)
+```
+
+* Violence Risk by Age (ANOVA), controlling for sociodemographic variables
+```{r}
+mod1 <- setCor(dusi_violencerisk~age+iq_comp+ses+sex+race+anthro_bmi+pds,data=df)
+mod2 <- setCor(dusi_violencerisk~age+ses,data=df)
+mod1
+mod3 <- setCor(anthro_bmi~dusi_health+ses,data=df)
+mod3
+anova(mod1,mod2)
+rm("mod1","mod2","mod3")
+```
+
+Good statistical practice involves visualizing the distribution of your data to assess normality, an important assumption in many standard statistical models. Note that the regularized regression and structural equation models employed here do not require standard distribution of data- they rather require standard residuals as revealed by QQ plots below.
+
+### Wave 1: Distribution of Measures
+```{r}
+# create DUSI data frame for each wave
+## let's extract age, sex, pds (our important covariates) and subscales from the DUSI for each wave
+### WAVE 1
+df_wave1 <- data.frame(subset(df, wave==1))
+df_wave1 <- df_wave1[,c("age","sex","pds","iq_nonverb","iq_verb","ses","anthro_bmi","bis","bas_drive","bas_funseeking","bas_rewres",
+                        "dusi_apd","dusi_violencerisk","dusi_substanceuse","dusi_behavior","dusi_health","dusi_psychiatricdisorder","dusi_social","dusi_family","dusi_school","dusi_work","dusi_peer","dusi_leisure","dusi_lie","dusi_everuser","subjectid","violence_experience")]
+df_sel=subset(df_wave1,select = -c(subjectid,age,sex,pds,violence_experience,ses,iq_nonverb,iq_verb))
+## lets visualize the distribution and test statistics for assessing normality
+result <- mvn(data=df_sel,mvnTest = "royston",univariatePlot="histogram")
+result <- mvn(data=df_sel,mvnTest = "royston",univariatePlot="qqplot")
+result
+rm("result","df_sel")
+```
+### Wave 2: Distribution of Measures
+```{r}
+### WAVE 2
+df_wave2 <- data.frame(subset(df, wave==2))
+df_wave2 <- df_wave2[,c("age","sex","pds","iq_nonverb","iq_verb","ses","anthro_bmi","bis","bas_drive","bas_funseeking","bas_rewres","dusi_apd","dusi_violencerisk","dusi_substanceuse","dusi_behavior","dusi_health","dusi_psychiatricdisorder","dusi_social","dusi_family","dusi_school","dusi_work","dusi_peer","dusi_leisure","dusi_lie","dusi_everuser","subjectid","violence_experience")]
+df_sel=subset(df_wave2,select = -c(subjectid,age,sex,pds,violence_experience,ses,iq_nonverb,iq_verb))
+## lets visualize the distribution and test statistics for assessing normality
+result <- mvn(data=df_sel,mvnTest = "royston",univariatePlot="histogram")
+result <- mvn(data=df_sel,mvnTest = "royston",univariatePlot="qqplot")
+result
+rm("result","df_sel")
+```
+### Wave 3 Distribution of Measures
+```{r}
+### WAVE 3
+df_wave3 <- data.frame(subset(df, wave==3))
+df_wave3 <- df_wave3[,c("age","sex","pds","iq_nonverb","iq_verb","ses","anthro_bmi","bis","bas_drive","bas_funseeking","bas_rewres","dusi_apd","dusi_violencerisk","dusi_substanceuse","dusi_behavior","dusi_health","dusi_psychiatricdisorder","dusi_social","dusi_family","dusi_school","dusi_work","dusi_peer","dusi_leisure","dusi_lie","dusi_everuser","subjectid","violence_experience")]
+df_sel=subset(df_wave3,select = -c(subjectid,age,sex,pds,violence_experience,ses,iq_nonverb,iq_verb))
+## lets visualize the distribution and test statistics for assessing normality
+result <- mvn(data=df_sel,mvnTest = "royston",univariatePlot="histogram")
+result <- mvn(data=df_sel,mvnTest = "royston",univariatePlot="qqplot")
+result
+rm("result","df_sel")
+```
+## Decomposition of Risk Metric
+The risk metric is composed of 13 questions selected from 10 subscales of the Drug Use Survey Inventory (Revised) that each measure contributions of maladaptive and risky behavior such as: substance use, behavioral problems, health issues, mood and pyschiatric profile, family climate, school performance and attitudes, employment, and excessive leisure/social disengagement. 
+
+Although the violence proneness risk metric is composed of a selection of these 13 questions, mostly derived from risky peer relations and school problems - there may be cross-correlations across the subscales in our sample that may provide additional insight into the sociodemographic-behavioral profile underlying risk. 
+
+To dissect the relative importance of each of these subscales, a regularized regression model will be fit that weights each sub-measure according to how well it explains the variance in the computed risk metric. Regularized regression depends on an estimate of the 'lambda' parameter, so we will use wave 1 data for leave-one-out cross-validation estimation of this parameter. The stable lambda estimate will be used to produce coefficient estimates for predicting wave 2 and wave 3 risk. The final results will reveal the most important subscales contributing to high risk of violent or adverse outcomes by adulthood.
+
+### Regularized Regression Model Specification
+```{r}
+# let's train the data on wave 1 and predict wave 2
+## -- input must be a matrix or you will receive "'list' object cannot be coerced to type 'double'" error
+predictors_wave1 <- as.matrix(df_wave1[,c("dusi_behavior","dusi_health","dusi_psychiatricdisorder","dusi_social","dusi_family","dusi_school","dusi_peer","dusi_leisure","dusi_lie","dusi_everuser")])
+outcome_wave1 <- as.matrix(df_wave1[,c("dusi_violencerisk")])
+## -- cross-validation will discover best fitting lambda
+## -- alpha value of 0 will set ridge regression analysis
+rr_wave1 <- cv.glmnet(predictors_wave1, outcome_wave1, family='gaussian',alpha = 1,na.rm=TRUE)
+lambda_wave1 <- rr_wave1$lambda.min
+# estimate the r squared of the fit
+print('R squared EP')
+rsq = 1 - rr_wave1$cvm/var(outcome_wave1[,1])
+plot(rr_wave1$lambda,rsq)
+max(rsq)
+# Rebuilding the model with best lamda value identified
+rr_wave1_optimal <- glmnet(predictors_wave1, outcome_wave1, family="gaussian", alpha = 1, lambda = lambda_wave1)
+# use coefficients to predict wave 1
+predicted_wave1 <- predict(rr_wave1_optimal, s =lambda_wave1, newx = predictors_wave1)
+df_wave1$predicted <- predicted_wave1
+## Prediction at Waves 2 and 3
+### Wave 2 
+# define prediction and outcome variables for wave 2
+predictors_wave2= as.matrix(df_wave2[,c("dusi_behavior","dusi_health","dusi_psychiatricdisorder","dusi_social","dusi_family","dusi_school","dusi_peer","dusi_leisure","dusi_lie","dusi_everuser")])
+outcome_wave2=as.matrix(df_wave2[,c("dusi_violencerisk")])
+# use coefficients to predict wave 1
+predicted_wave2 <- predict(rr_wave1_optimal, s =lambda_wave1, newx = predictors_wave1)
+print('Wave 1 Prediction')
+final <- cbind(outcome_wave1, predicted_wave1)
+head(final)
+# use coefficients from wave 1 training to predict wave 2
+predicted_wave2 <- predict(rr_wave1_optimal, s =lambda_wave1, newx = predictors_wave2)
+df_wave2$predicted <- predicted_wave2
+print('Wave 2 Prediction')
+final <- cbind(outcome_wave2, predicted_wave2)
+head(final)
+### Wave 3 
+# define prediction and outcome variables for wave 2
+predictors_wave3= as.matrix(df_wave3[,c("dusi_behavior","dusi_health","dusi_psychiatricdisorder","dusi_social","dusi_family","dusi_school","dusi_peer","dusi_leisure","dusi_lie","dusi_everuser")])
+outcome_wave3=as.matrix(df_wave3[,c("dusi_violencerisk")])
+# use coefficients from wave 1 training to predict wave 2
+predicted_wave3 <- predict(rr_wave1_optimal, s =lambda_wave1, newx = predictors_wave3)
+df_wave3$predicted <- predicted_wave3
+print('Wave 3 Prediction')
+final <- cbind(outcome_wave3, predicted_wave3)
+head(final)
+```
+Next we assess the explanatory power of the model by computing the coefficient of determination, or the R squared value by calculating the realized sum of squares and dividing by the total sum of squares. The fit is very good since the scale is calculated the same across waves, we can use the same model from wave 1 to generated predicted values at waves 2 and 3. 
+```{r}
+# calculate R squared
+rss <- sum((outcome_wave1 - predicted_wave1) ^ 2)
+tss <- sum((outcome_wave1 - mean(outcome_wave1)) ^ 2)
+rsq <- 1 - rss/tss
+print('Wave 1 R Squared')
+print(rsq)
+# calculate R squared
+rss <- sum((outcome_wave2 - predicted_wave2) ^ 2)
+tss <- sum((outcome_wave2 - mean(outcome_wave2)) ^ 2)
+rsq <- 1 - rss/tss
+print('Wave 2 R Squared')
+print(rsq)
+# calculate R squared
+rss <- sum((outcome_wave3 - predicted_wave3) ^ 2)
+tss <- sum((outcome_wave3 - mean(outcome_wave3)) ^ 2)
+rsq <- 1 - rss/tss
+print('Wave 3 R Squared')
+print(rsq)
+```
+We can visualize the subscales that contribute the most to violence risk by sorting the weights computed by the ridge regression model and plotting.
+```{r}
+#  display coefficients
+significant_risk_coefs <- as.array(coef(rr_wave1_optimal))
+src_df <- data.frame(significant_risk_coefs)
+# visualize ranked
+ggplot(src_df) +
+    geom_point(aes(x = s0, y = reorder(rownames(src_df),s0)),size=5) +
+  # add formatting
+  theme(plot.title = element_text(size=18, face = "bold"), axis.title.y = element_text(size = 16, face = "bold"), axis.title.x = element_text(size = 24, face = "bold"),axis.text.x = element_text(size = 12,  face = "bold"),axis.text.y = element_text(size = 12, face = "bold")) +
+   # add label axes and title
+   labs(title="Ranking Risk Subscales",x="Estimated Coefficents", y = "Subscales")  
+knit_print(src_df)
+
+```
+We find that school, peer and work risk factors contribute the most to the overall risk of an adverse violent outcome by adulthood. Note that the violence proneness metric originally defined by the DUSI was computed from the school & peer risk measures. Here we find that lower risk of problems at work as a significant predictor. Note that the work measure shows a very skewed distribution along with non-normal residuals, so we can discount this metric. Most participants were not employed during the course of the study and the few that were did not report high risk, driving a very strong anti-correlation with violence proneness.
+
+Now let's plot the model using fitted coefficients.
+```{r}
+# define data frame for plotting
+plot_df <- data.frame(subjectid = c(df_wave1$subjectid, df_wave2$subjectid, df_wave3$subjectid),
+                      sex =  c(df_wave1$sex, df_wave2$sex, df_wave3$sex),
+                      age = c(df_wave1$age, df_wave2$age, df_wave3$age),
+                      pds = c(df_wave1$pds,df_wave2$pds,df_wave3$pds),
+                      dusi_school = c(df_wave1$dusi_school,df_wave2$dusi_school,df_wave3$dusi_school),
+                      dusi_peer = c(df_wave1$dusi_peer,df_wave2$dusi_peer,df_wave3$dusi_peer),
+                      dusi_work = c(df_wave1$dusi_work,df_wave2$dusi_work,df_wave3$dusi_work),
+                      violence_experience =  c(df_wave1$violence_experience, df_wave2$violence_experience, df_wave3$violence_experience),
+                      risk = c(outcome_wave1,outcome_wave2,outcome_wave3),
+                      risk_predicted = c(predicted_wave1,predicted_wave2,predicted_wave3)
+                      )
+
+# factor definitions
+plot_df$sex <- factor(plot_df$sex,
+                      levels=c(0,1),
+                      labels=c("Female","Male"))
+plot_df$race <- factor(df$race,
+                        levels = c(1,2,3,4),
+                        labels = c('White','Black','Hispanic','Other'))
+plot_df$wave <- factor(df$wave)
+plot_df$ses <- df$ses
+# graph original
+ggplot(plot_df) +
+  geom_line(aes(x=age,y=risk,group=subjectid),color='gray')  +
+  geom_point(aes(x = age, y = risk,color=sex),alpha=1/3) + stat_smooth(aes(x=age,y=risk),color="black",method="lm") +
+  # format
+  scale_color_brewer(palette="Dark2") + 
+  theme(plot.title = element_text(size=18, face = "bold"), axis.title.y = element_text(size = 16, face = "bold"),axis.title.x = element_text(size = 24, face = "bold"),axis.text.x = element_text(size = 18,  face = "bold"),axis.text.y = element_text(size = 18, face = "bold"), legend.title = element_text(size=14,face="bold"),legend.text =  element_text(size=12)) +
+   # add label axes and title
+  labs(x="Age", y = "Risk of Adverse Outcome",col="Sex") 
+# graph predicted
+ggplot(plot_df) +
+  geom_line(aes(x=age,y=risk_predicted,group=subjectid),color='gray')  +
+  geom_point(aes(x = age, y = risk_predicted,color=sex),alpha=1/3) + stat_smooth(aes(x=age,y=risk_predicted),color="black",method="lm") +
+  # format
+  scale_color_brewer(palette="Dark2") + 
+  theme(plot.title = element_text(size=18, face = "bold"), axis.title.y = element_text(size = 16, face = "bold"),axis.title.x = element_text(size = 24, face = "bold"),axis.text.x = element_text(size = 18,  face = "bold"),axis.text.y = element_text(size = 18, face = "bold"), legend.title = element_text(size=14,face="bold"),legend.text =  element_text(size=12)) +
+   # add label axes and title
+  labs(x="Age", y = "Risk of Adverse Outcome",col="Sex")
+# clean up
+rm("final","outcome_wave1","outcome_wave2","outcome_wave3","predictors_wave1","predictors_wave2","predictors_wave3","rr_wave1","rr_wave1_optimal","src_df","lambda_wave1","rsq","rss","tss","predicted_wave1","predicted_wave2","predicted_wave3")
+```
+
+### Violence Risk vs Sociodemographics
+Bivariate exploration of relationships between risk and sociodemographic covariates.
+```{r}
+df.corr <- plot_df[,3:13]
+df.corr$violence_victim_total <- df$violence_victim_total
+df.corr$violence_perp <- df$violence_perp
+df.corr$user_qs <- df$drug_use_quick_screen
+df.corr$bis <- df$bis
+df.corr$bas_drive <- df$bas_drive
+df.corr$bas_rewres <- df$bas_rewres
+df.corr$bas_funseeking <- df$bas_funseeking
+df.corr$anthro_bmi <- df$anthro_bmi
+df.corr$iq_nonverb <- df$iq_nonverb
+df.corr$iq_verb <- df$iq_verb
+df.corr=subset(df.corr,select = -c(race,wave))
+df.corr <- as.data.frame(scale(df.corr))
+df.corr$age <- df$age
+# compute correlation 
+correlation <- corr.test(df.corr,adjust="holm",alpha=0.05,)
+corrplot::corrplot(correlation[["r"]], method="color",
+                   tl.cex=0.8,
+                   tl.col="black",
+                   addCoef.col = "black",
+                   addgrid.col=NULL,
+                   number.cex=1)
+df.corr$sex <- factor(df$sex,levels=c("0","1"),labels=c("Female","Male"))
+df.corr$race <- factor(df$race,
+                        levels = c(1,2,3,4),
+                        labels = c('White','Black','Hispanic','Other'))
+```
+#### Violence Risk by Age (ANOVA)
+Effect of Age and SES
+```{r}
+mod1 <- setCor(dusi_school ~age+iq_comp+ses+sex+race+anthro_bmi+pds + bas_funseeking + bas_rewres + bas_drive + bis,data=df)
+mod1
+mod2 <- setCor(dusi_peer ~age+iq_comp+ses+sex+race+anthro_bmi+pds + bas_funseeking + bas_rewres + bas_drive + bis,data=df)
+mod2
+mod3 <- setCor(dusi_health ~age+iq_comp+ses+sex+race+anthro_bmi+pds + bas_funseeking + bas_rewres + bas_drive + bis,data=df)
+mod3
+rm("mod1","mod2","mod3")
+```
+Effect of BIS/BAS Scales
+```{r}
+mod1 <- setCor(dusi_violencerisk ~ bas_funseeking + bas_rewres + bas_drive + bis,data=df)
+mod1
+rm("mod1")
+```
+Effect of User Status
+```{r}
+mod1 <- setCor(dusi_violencerisk ~ dusi_everuser,data=df)
+rm("mod1")
+```
+### Linear Mixed Effect Model
+Risk values predicted by regularized regression were modeled longitudinally with linear mixed effects models to estimate the growth of risk over time while controlling for random effects. Grouping random effects as repeated observations measured by subject or by wave returned comparable estimates for rate of growth of violence risk; however subject grouping of random effects resulted in a more parsimonious model.
+```{r}
+df.corr$subjectid <- df$subjectid
+df.corr$sex <- df$sex
+df.corr$wave <- df$wave
+df.lmer <- df.corr[complete.cases(df.corr[,c("age")]),]
+# null model
+lmer.null.subject.fit <- lmerTest::lmer('risk_predicted ~ (1|subjectid)',df.lmer,na.action = na.exclude,REML=FALSE)
+# same slope random intercept
+lmer.ssri.age.fit <- lmerTest::lmer('risk_predicted ~ age + (1|subjectid)',df.lmer,na.action = na.exclude)
+# random slope same intercept
+lmer.rssi.age.fit <- lmerTest::lmer('risk_predicted ~ (1+age|subjectid)',df.lmer,na.action = na.exclude)
+# random slope random intercept
+lmer.rsri.age.fit <- lmerTest::lmer('risk_predicted ~ age + (1+age|subjectid)',df.lmer,na.action = na.exclude)
+# compare with null model
+anova(lmer.null.subject.fit,lmer.rssi.age.fit,lmer.ssri.age.fit,lmer.rsri.age.fit)
+# print summary of significant model
+summary(lmer.ssri.age.fit)
+summary(lmer.rsri.age.fit)
+```
+```{r}
+# graph predicted
+ggplot(df.lmer) +
+  geom_line(aes(x=age,y=predict(lmer.rsri.age.fit),group=subjectid,color=sex)) + scale_fill_brewer() +  
+  stat_smooth(aes(x=age,y=predict(lmer.rsri.age.fit)),color="black",method="lm") +
+  geom_point(aes(x=age,y=predict(lmer.rsri.age.fit),color=sex)) +  theme(plot.title = element_text(size=18, face = "bold"), axis.title.y = element_text(size = 16, face = "bold"),axis.title.x = element_text(size = 24, face = "bold"),axis.text.x = element_text(size = 18,  face = "bold"),axis.text.y = element_text(size = 18, face = "bold"), legend.title = element_text(size=14,face="bold"),legend.text =  element_text(size=12)) +
+  labs(x="Age", y = "Predicted Risk of Adverse Outcome",col="Sex")   
+```
+## Experience of Violence in Adulthood
+```{r}
+# grab complete data (no subjects excluded at wave 1)
+df.vexp <- adsdf[complete.cases(adsdf$wave),]
+# exclude high LIE scale, remove from dataframe
+df.vexp[which(df$dusi_lie > 6),] <- NA
+# measurement model
+cfa.vexp <- 
+           ' 
+           # Measurement model
+            vexp.latent =~ violence_perception_general + violence_observed_general + violence_victim_general + violence_perp
+            violence_perception_general ~~ violence_observed_general
+            # post hoc regression, uncomment to compute
+            #vexp.latent ~ dusi_violencerisk + sex + ses + anthro_bmi + iq_comp + bas_drive + bas_funseeking + bas_rewres + bis
+           '
+# fit model
+fit.cfa.vexp <- sem(cfa.vexp, data = df.vexp,missing="fiml",se="robust",std.lv=TRUE)
+# extract modification indices
+modificationindices(fit.cfa.vexp, minimum.value = 5)
+# plot
+semPlot::semPaths(fit.cfa.vexp,what='std',fade=FALSE)
+# show summary
+summary(fit.cfa.vexp, fit.measures=TRUE)
+# print table
+standardizedSolution(fit.cfa.vexp, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+```
+Our result shows that the experience of violence can be measured as a latent factor composed of the perception/observation of violence and violence perpetration/victimization. The latent factor estimates can be used to model other covariates related to violence experience once they are extracted.
+```{r}
+idx <- lavInspect(fit.cfa.vexp,"case.idx")
+vexp_scores <- lavPredict(fit.cfa.vexp,type='lv')
+for (fs in colnames(vexp_scores)) {
+  df.vexp[idx, fs] <- vexp_scores[ ,fs]
+}
+```
+
+
+### Structural Equation Model of Family + Social Health Latent Factor and Effect on Violence Experience
+```{r}
+
+# Define the initial measurement model
+sem.vexp <- 
+           ' 
+           # Measurement model --> social health = family climate and social support
+             fdss.latent  =~ family_relations_cohesion + family_relations_positive_beliefs + family_relations_structure + family_relations_deviant_beliefs + family_reactivity +  family_conflict + social_support
+             
+          # freely varying covariances
+                social_support	~~	family_reactivity
+             		family_relations_positive_beliefs	~~	family_relations_deviant_beliefs
+             		family_relations_positive_beliefs ~~ family_relations_cohesion
+             		family_relations_structure	~~	family_reactivity
+          
+          # post hoc regressions
+          # uncomment to compute
+          #fdss.latent ~ ses + sex + anthro_bmi + iq_comp + dusi_violencerisk + bas_drive + bas_funseeking + bas_rewres + bis
+          vexp.latent  + drug_use_quick_screen ~ fdss.latent
+           '
+# Fit the structural equation model and display paths
+fit.sem.fam.vexp <- sem(sem.vexp, data = df.vexp,missing="fiml",se="robust",std.lv=TRUE)
+semPlot::semPaths(fit.sem.fam.vexp,what='std',fade=FALSE)
+summary(fit.sem.fam.vexp, fit.measures=TRUE)
+# display modification indices
+modificationindices(fit.sem.fam.vexp, minimum.value = 5)
+plot_matrix(residuals(fit.sem.fam.vexp, type="cor")$cov)
+# display standardized values
+standardizedSolution(fit.sem.fam.vexp, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+```
+Confirmatory factor analysis demonstrates family and social support is a latent factor positively supported by family cohesion, positive family beliefs, overall social support and negatively supported by family disorganization, deviant beliefs, reactivity and conflict.
+
+### Structural Equation Model of Social Adversity Latent Factor and Effect on Violence Experience
+```{r}
+# Define the initial measurement model
+sem.vexp <- 
+           ' 
+           # Measurement model
+            sswb.latent =~ demographics_neighborhood_resources + demographics_neighborhood_cohesion + demographics_neighborhood_disorganization + neighborhood_crimecoping + neighborhood_cimefear + life_events_stressful
+             
+          # freely varying covariances
+            demographics_neighborhood_disorganization	~~	neighborhood_cimefear
+            neighborhood_crimecoping	~~	neighborhood_cimefear
+            
+          # post hoc regressions
+          #vexp + drug_use_quick_screen ~ social_health.latent
+          #sswb.latent ~ ses + sex + anthro_bmi + iq_comp + dusi_violencerisk + bas_drive + bas_funseeking + bas_rewres + bis
+           '
+# Fit the structural equation model and display paths
+fit.sem.soc.vexp <- sem(sem.vexp, data = df.vexp,missing="fiml",se="robust",std.lv=TRUE)
+semPlot::semPaths(fit.sem.soc.vexp,what='std',fade=FALSE)
+summary(fit.sem.soc.vexp, fit.measures=TRUE)
+# display modification indices
+modificationindices(fit.sem.soc.vexp, minimum.value = 5)
+plot_matrix(residuals(fit.sem.soc.vexp, type="cor")$cov)
+# display standardized values
+standardizedSolution(fit.sem.soc.vexp, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+```
+Confirmatory factor analysis demonstrates social adversity is a latent factor driven by neighborhood disorganization, neighborhood fragmentation, coping with crime and fear of crime.
+
+### Structural Equation Model of Anti/Pro Social Attitudes Latent Factor and Effect on Violence Experience
+```{r}
+# Define the initial measurement model
+sem.vexp <- 
+           ' 
+           # Measurement model
+             snav.latent =~   attitude_guns_violence_aggressive_response_to_shame + attitude_guns_violence_comfort_with_aggression + attitude_guns_violence_excitement + attitude_guns_violence_power_safety + attitude_gangs + attitude_delinquency_friends + attitude_delinquency_self + social_responsibility
+          
+          # freely varying covariances
+          attitude_gangs	~~	attitude_delinquency_friends
+          attitude_guns_violence_comfort_with_aggression	~~	attitude_delinquency_self                    
+          attitude_delinquency_friends	~~	attitude_delinquency_self
+          attitude_guns_violence_power_safety	~~	attitude_delinquency_self
+          attitude_guns_violence_power_safety	~~	social_responsibility
+          attitude_guns_violence_excitement	~~	attitude_delinquency_friends
+          
+          # regressions
+          #vexp + drug_use_quick_screen ~ socatt.latent
+          #snav.latent ~ ses + sex + anthro_bmi + iq_comp + dusi_violencerisk + bas_drive + bas_funseeking + bas_rewres + bis
+          snav.latent ~ vexp.latent + drug_use_quick_screen
+           '
+# Fit the structural equation model and display paths
+fit.sem.socatt.vexp <- sem(sem.vexp, data = df.vexp,missing="fiml",se="robust",std.lv=TRUE)
+semPlot::semPaths(fit.sem.socatt.vexp,what='std',fade=FALSE,intercept=FALSE,residuals=FALSE)
+summary(fit.sem.socatt.vexp, fit.measures=TRUE)
+# display modification indices
+modificationindices(fit.sem.socatt.vexp, minimum.value = 5)
+plot_matrix(residuals(fit.sem.socatt.vexp, type="cor")$cov)
+# display standardized values
+standardizedSolution(fit.sem.socatt.vexp, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+# post-hoc power analysis
+#ph <- semPower.postHoc(effect = .2, effect.measure = 'RMSEA',
+#alpha = .01, N = 67, df = 4)
+#summary(ph)
+```
+
+Extract latent factor estimates for further modeling
+```{r}
+# extract social adversity latent factor
+idx <- lavInspect(fit.sem.soc.vexp,"case.idx")
+soc_scores <- lavPredict(fit.sem.soc.vexp,type='lv')
+for (fs in colnames(soc_scores)) {
+  df.vexp[idx, fs] <- soc_scores[ ,fs]
+}
+# extract family latent factor loadings
+idx <- lavInspect(fit.sem.fam.vexp,"case.idx")
+fam_scores <- lavPredict(fit.sem.fam.vexp,type='lv')
+for (fs in colnames(fam_scores)) {
+  df.vexp[idx, fs] <- fam_scores[ ,fs]
+}
+# extract social attitudes latent factor loadings
+idx <- lavInspect(fit.sem.socatt.vexp,"case.idx")
+soc_scores <- lavPredict(fit.sem.socatt.vexp,type='lv')
+for (fs in colnames(soc_scores)) {
+  df.vexp[idx, fs] <- soc_scores[ ,fs]
+}
+```
+
+## Latent Growth Curve Model of Risk for Adverse Outcomes.
+A Latent Growth Curve Model (LGCM) is an improvement over Analysis of Variance (ANOVA) and Multivariate ANOVA methods for testing and extracting trends over repeated time measurements. The LGCM requires data to be approximately spaced in time across observations (at least 3 time points!), making it well suited for longitudinal studies with waves of data collection. Dependent variables are assumed to be continuous for maximum likelihood estimation of population statistics. The model can be specified as linear or curvilinear! Random effects across participants are individually fit and compared to the whole group and categorical effects can be specified in the model.
+
+### Formatting Data from Long to Wide
+We must define a dataset in wide format to fit a growth curve model. This is defined such that each unique observation, i.e., participant, is a row and all time points are included as columns. Reformating our long format dataframe into wide will result in a duplication of variable names and an appending of a '.1', '.2', etc. for each subsequent repeated observation.
+```{r}
+# filter the behavioral data for those with wave 4 & brain data
+df.temp <- df.vexp[,c("subjectid","wave","sex","age","iq_comp","bis","bas_rewres","bas_drive","bas_funseeking","pds","ses","race","dusi_violencerisk","dusi_lie","violence_experience","vexp.latent","snav.latent","sswb.latent","fdss.latent","wave4_age","dusi_everuser","drug_use_quick_screen")]
+# add predicted risk
+## -- first create temporary data frame to merge
+df.temp.merge <- data.frame("subjectid"=df.lmer$subjectid,"wave"=df.lmer$wave,"risk_predicted"=predict(lmer.ssri.age.fit))
+## -- merge everything
+df.temp.merged<-merge(df.temp.merge,df.temp,all=TRUE)
+
+# making data wideee
+df_wide <- data.frame(subset(df.temp.merged, wave == 1), subset(df.temp.merged,wave== 2), subset(df.temp.merged,wave==3 ))
+# label DUSI LIE > 6 as NA -- these are bad faith responses
+df_wide[which(df_wide$dusi_lie > 6 | df_wide$dusi_lie.1 > 6 | df_wide$dusi_lie.2 > 6 ),] <- NA
+# Define factors and labels
+#df_wide$subjectid <- as.factor(df_wide$subjectid)
+#df_wide$sex <- as.factor(df_wide$sex)
+#df_wide$sex <- revalue(df_wide$sex, c("1"="female", "0"="male"))
+df_wide$wave <- as.factor(df_wide$wave)
+df_wide$wave.1 <- as.factor(df_wide$wave.1)
+df_wide$wave.2 <- as.factor(df_wide$wave.2)
+df_wide$race <- factor(df_wide$race,
+                        levels = c(1,2,3,4),
+                        labels = c('White','Black','Hispanic','Other'))
+```
+Now we define our growth curve model and fit it. Note we use FIML to impute missing data and a robust estimator to deal with bias in estimation of standard error given non-normal residuals.
+```{r}
+# a linear growth model with a time-varying covariate
+model <- ' 
+           # time varying covariates
+           dusi_violencerisk ~ bis + bas_rewres + bas_drive + bas_funseeking
+           dusi_violencerisk.1 ~ bis.1 + bas_rewres.1 + bas_drive.1 + bas_funseeking.1
+           dusi_violencerisk.2 ~ bis.2 + bas_rewres.2 + bas_drive.2 + bas_funseeking.2
+           # define intercept and slope
+           i =~ 1*dusi_violencerisk + 1*dusi_violencerisk.1 + 1*dusi_violencerisk.2
+           s =~ 0*dusi_violencerisk + 1*dusi_violencerisk.1 + 2*dusi_violencerisk.2           
+           # regression on linear growth curve
+           i ~ ses + sex + dusi_everuser
+           s ~ ses + sex + dusi_everuser
+           # regress outcome variable by latent factors
+           violence_experience ~ i + s
+          '
+# full information maximum likelihood to work with missing data
+# --> data is missing at random, some participants came back, others didnt
+# --> some participants answered some questions, others didnt
+lgcm <- lavaan::growth(model, data=df_wide,missing = "fiml")
+summary(lgcm,fit.measures=TRUE,standardized = TRUE)
+# simple plot
+# full plot with effects and disturbances
+#,color=c("black","white","gray","#ded9ca")
+#,nodeLabels = c("NEacc","NEmrt","NEsdrt","PEacc","PEmrt","PEsdrt","HRp","HRmrt","LRmrt")
+# display modification indices
+modificationindices(lgcm, minimum.value = 5)
+plot_matrix(residuals(lgcm, type="cor")$cov)
+# display standardized values
+standardizedSolution(lgcm, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+semPlot::semPaths(lgcm,what='std',fade=FALSE,curvePivot=FALSE,style="lisrel",layout='tree',intercepts=FALSE,residuals=FALSE,thresholds=FALSE,rotation=2,reorder=TRUE,exoVar=FALSE)
+
+fitmeasures(lgcm)
+# compare against baseline null model
+# RMSEA =√{\frac{χ^2}{N \times df} - \frac{1}{N}} \times √{G}
+nullRMSEA(lgcm)
+```
+```{r}
+#color=c("#ded9ca","#ded9ca","#ded9ca","black","white","white","gray","grey"),nodeLabels = c("VP-W1","VP-W2","VP-W3","VExp","Sex","SES","Intr","Slope"),
+semPlot::semPaths(lgcm,what='std',fade=FALSE ,whatLabels='std',style="lisrel",edge.label.cex = 0.5,layout='tree',intercepts=FALSE,residuals=FALSE,rotation=4,sizeMan=5,curvePivot=TRUE,curve=1.2,sizeLat=5, edge.color="black",edge.width=0.5,label.cex=1.2,border.width=2.35,combineGroups=FALSE,groups="latents", bifactor = "g")
+```
+The Growth Curve summary statistics decompose the fit quality, significance and estimates of the latent variables and specified regressions into different sections. The effect of the slope and intercept latent variables is included under the "Intercepts" section (strangely enough). The most important result is that of the slope, if there is no significance here then a GCM is not appropriate model for the dataset.  The second most important results are the fit indices that give an indication of how well the model fits the observed data. The variances also provide estimates of how much remaining residual variance exists following the fit. The variances can help us understand whether we should futher specify our model. 
+
+The overall quality of the fit can be explored by evaluating the Comparative Fit Index (CFI) and Tucker-Lewis Index (TLI), where a value > 0.9 indicates a good fit. The root mean square error of approximation (RMSE) is another commonly reported metric of fit quality. The error of approximation measures the overall tightness of the covariance between the different variables. A lower value indicates a better fit. The p value printed with the test results indicates how "close" the fit is, a p value greater than a typical threshold of p > 0.05 indicates the model has a close fit.
+
+### Post Hoc Analysis of LGCM
+Let's extract the latent variable values and test for group differences:
+```{r}
+# extract latent growth factor loadings
+idx <- lavInspect(lgcm,"case.idx")
+lgcm_scores <- lavPredict(lgcm,type='lv')
+for (fs in colnames(lgcm_scores)) {
+  df_wide[idx,fs] <- lgcm_scores[,fs]
+}
+# need to redefine sex as a factor level post gcm (cannot be used as factor in gcm)
+df_wide$sex <- factor(df_wide$sex,
+                        levels = c(0,1),
+                        labels = c('Male','Female'))
+```
+### Post Hoc Analyses
+Is greater slope related to earlier age of reporting greater violence experience?
+```{r}
+# Does Risk Predict Experiences of Violence in Adulthood?
+print('Risk Interaction with Sex vs Outcome Controlling for SES')
+agevio <- lm(violence_experience ~ s:wave4_age,data=df_wide)
+summary(agevio)
+```
+
+## Mediation Model of Latent Factors for Experience of Violence
+```{r}
+sem.med <- '
+      # ------------------------------------------------
+      # Pro-Delinquency Emerges from Social Strain
+      # ------------------------------------------------
+      #    --> family and social support fragments with social strain
+       fdss.latent ~ a*sswb.latent
+      #   --> deviance driven by social strain
+       snav.latent ~ b*sswb.latent
+      #   --> deviance driven by family support       
+       snav.latent ~ f*fdss.latent
+      #     --> snav effected by vexp
+       snav.latent ~ d*vexp.latent       
+      #     --> violence experience driven by family climate
+       vexp.latent ~ c*fdss.latent
+      #     --> violence experience driven by social adversity
+       vexp.latent ~ e*sswb.latent
+      # -------------
+      # MEDIATION 
+      # -------------
+      # direct, indirect and total effects
+      # VEXP
+      vexp_direct_sswb := e
+      vexp_indirect_fdss :=a*c
+      vexp_total := e + a*c
+      # SNAV
+      snav_direct_sswb := b
+      snav_direct_vexp := d
+      snav_indirect_fdss_vexp := a*c*d
+      snav_indirect_vexp := e*d
+      snav_total := b + e*d
+      # total
+      total := e*d + a*c + b
+      
+           snav.latent ~ hopelessness_future + aggression_anger
+           aggression_bullying ~ snav.latent
+           aggression_fighting ~ snav.latent
+'
+# Fit the structural equation model and display paths
+fit.sem.med <- sem(sem.med,data=df.vexp,missing="fiml",std.lv=TRUE,meanstructure=TRUE,se="robust")
+# Plot the model
+semPlot::semPaths(fit.sem.med,what='std',fade=FALSE,rotation=1,layout="tree2")
+summary(fit.sem.med, fit.measures=TRUE)
+# display modification indices
+modificationindices(fit.sem.med, minimum.value = 5)
+plot_matrix(residuals(fit.sem.med, type="cor")$cov)
+# display standardized values
+standardizedSolution(fit.sem.med, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+```
+```{r}
+pdf('/Users/admin/ipn-dissertation/figures/chp-I_paths.pdf',width=15,height=11)
+semPlot::semPaths(fit.sem.med,what='std',fade=FALSE,rotation=2,layout="tree2",fade=TRUE,residuals=FALSE,intercepts=FALSE,edge.label.cex = 1,sizeMan=10,node.width =1,nodeLabels=c("FDSS","SNAV","VExp","Bullying","Fighting","SSWB","Hope","Anger"),layoutSplit = 1,curve=2.25,curvature=1,shapeMan="ellipse",edge.width=1.5,thresholds=1,esize=2,edge.color="black",details=0,edge.label.position=0.35,weighted=0)
+#semPlot:::semPaths(fit.sem.med,what='est',fade=FALSE,residuals=FALSE,intercepts=FALSE,layout='tree2',edge.label.cex = 1,rotation=1,sizeMan=12,node.width =1,curvePivot=FALSE,curve=2,edge.color="black",label.cex=2,edge.width=1,border.width=1,trans=FALSE)
+```
+## Mediation Model of Latent Factors for Experience of Violence
+```{r}
+sem.med <- '
+           # Post Hoc Regression
+           snav.latent ~ hopelessness_future + aggression_anger
+           aggression_bullying ~ snav.latent
+           aggression_fighting ~ snav.latent
+'
+# Fit the structural equation model and display paths
+fit.sem.med <- sem(sem.med,data=df.vexp,missing="fiml",std.lv=TRUE)
+# Plot the model
+semPlot::semPaths(fit.sem.med,what='std',fade=TRUE,rotation=2,layout="tree2")
+summary(fit.sem.med, fit.measures=TRUE)
+# display modification indices
+modificationindices(fit.sem.med, minimum.value = 5)
+plot_matrix(residuals(fit.sem.med, type="cor")$cov)
+# display standardized values
+standardizedSolution(fit.sem.med, type = "std.all", se = TRUE, zstat = TRUE, 
+                     pvalue = TRUE, ci = TRUE, level = 0.95, cov.std = TRUE, 
+                     remove.eq = TRUE, remove.ineq = TRUE, remove.def = FALSE, 
+                     partable = NULL, GLIST = NULL, est = NULL,
+                     output = "data.frame")
+```
+
+```{r}
+## Write latent factors to file (to use in other analyses)
+vexp.lv.df <- df.vexp
+save(vexp.lv.df,file='~/Projects/eldamaty2020b/analysis/vexp-latent-estimates.RData')
+```
